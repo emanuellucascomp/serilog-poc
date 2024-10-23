@@ -24,7 +24,7 @@ public class CustomJsonTextFormatter : ITextFormatter
         output.Write("\",");
 
         // Write log level
-        output.Write("\"logLeve\":\"");
+        output.Write("\"logLevel\":\"");
         output.Write(logEvent.Level);
         output.Write("\",");
 
@@ -42,7 +42,7 @@ public class CustomJsonTextFormatter : ITextFormatter
         output.Write("\"properties\":{");
         foreach (var property in logEvent.Properties)
         {
-            output.Write($"\"{property.Key.ToLower()}\":");
+            output.Write($"\"{char.ToLower(property.Key[0]) + property.Key.Substring(1)}\":");
             property.Value.Render(output);
             output.Write(",");
         }

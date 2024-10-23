@@ -15,7 +15,7 @@ public static class SerilogExtensions
             loggerConfiguration
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)  // Avoid noise from framework logs
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("ApplicationName", context.HostingEnvironment.ApplicationName)
+                .Enrich.WithProperty("applicationName", context.HostingEnvironment.ApplicationName)
                 .WriteTo.Async(a => a.Console(new CustomJsonTextFormatter()))  // Async console sink
                 .ReadFrom.Configuration(context.Configuration);  // Optional: Load from appsettings.json
         });
