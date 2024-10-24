@@ -16,7 +16,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
-        var user = new { Name = "Alice", Age = 30, City = "Wonderland" };
+        var user = new { Name = "Alice", Age = 30, City = "Wonderland", Email = "alice@wonderland.com" };
         Log.Information("{@User}", user);
 
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
