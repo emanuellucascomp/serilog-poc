@@ -1,53 +1,20 @@
 ﻿namespace WeatherApi.Utils;
 
 using Serilog.Events;
-using Serilog.Formatting;
-using System;
+using Serilog.Formatting.Json;
 using System.IO;
 
-public class CustomJsonTextFormatter : ITextFormatter
-{
-    private readonly string _timestampFormat;
-
-    public CustomJsonTextFormatter(string timestampFormat = "dd/MM/yyyy HH:mm:ss.fff")
-    {
-        _timestampFormat = timestampFormat;
-    }
-
-    public void Format(LogEvent logEvent, TextWriter output)
-    {
-        output.Write("{");
-
-        // Write timestamp
-        output.Write("\"timestamp\":\"");
-        output.Write(logEvent.Timestamp.ToString(_timestampFormat));
-        output.Write("\",");
-
-        // Write log level
-        output.Write("\"logLevel\":\"");
-        output.Write(logEvent.Level);
-        output.Write("\",");
-
-        // Write message template
-        output.Write("\"messageTemplate\":\"");
-        output.Write(logEvent.MessageTemplate.Text);
-        output.Write("\",");
-
-        // Write rendered message
-        output.Write("\"message\":\"");
-        output.Write(logEvent.RenderMessage());
-        output.Write("\",");
-
-        // Write log properties (if any)
-        output.Write("\"properties\":{");
-        foreach (var property in logEvent.Properties)
-        {
-            output.Write($"\"{char.ToLower(property.Key[0]) + property.Key.Substring(1)}\":");
-            property.Value.Render(output);
-            output.Write(",");
-        }
-
-        output.Write("}}");
-        output.WriteLine();
-    }
-}
+// public class CustomJsonFormatter : JsonFormatter
+// {
+//     public CustomJsonFormatter() : base(renderMessage: true)
+//     {
+//     }
+//
+//     protected override void WriteTimestamp(LogEvent logEvent, TextWriter output)
+//     {
+//         // Write "time_stamp" instead of "Timestamp"
+//         output.Write(",\"time_stamp\":\"");
+//         output.Write(logEvent.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+//         output.Write('\"');
+//     }
+// }

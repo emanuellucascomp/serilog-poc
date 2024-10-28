@@ -16,8 +16,9 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)  // Avoid noise from framework logs
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("applicationName", context.HostingEnvironment.ApplicationName)
-                .Enrich.With<MaskEmailEnricher>()
-                .WriteTo.Async(a => a.Console(new CustomJsonTextFormatter()))  // Async console sink
+                .WriteTo.Sink(new CustomFieldRenamingSink(Console.Out))
+                // .Enrich.With<MaskEmailEnricher>()
+                // .WriteTo.Async(a => a.Console(new CustomJsonTextFormatter()))  // Async console sink
                 .ReadFrom.Configuration(context.Configuration);  // Optional: Load from appsettings.json
         });
     }
