@@ -1,4 +1,6 @@
-﻿namespace WeatherApi.Utils;
+﻿using System.Text.Encodings.Web;
+
+namespace WeatherApi.Utils;
 
 using Serilog.Core;
 using Serilog.Events;
@@ -20,7 +22,7 @@ public class CustomFieldRenamingSink : ILogEventSink
         var logDictionary = new Dictionary<string, object>
         {
             // Rename "Timestamp" to "time_stamp"
-            { "timeStamp", logEvent.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ") },
+            { "timestamp", logEvent.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ") },
             // Rename "Level" to "log_level"
             { "logLevel", logEvent.Level.ToString() },
             // Rename "MessageTemplate" to "template"
@@ -32,13 +34,29 @@ public class CustomFieldRenamingSink : ILogEventSink
         // Add all properties under "Properties" as usual
         foreach (var property in logEvent.Properties)
         {
-            logDictionary[property.Key] = property.Value.ToString();
+            logDictionary[property.Key] = TrimQuotesFromValue(property.Value.ToString());
         }
+        
+        JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = false,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // This avoids Unicode escaping
+        };
 
         // Serialize the modified dictionary to JSON
-        string json = JsonSerializer.Serialize(logDictionary);
+        string json = JsonSerializer.Serialize(logDictionary, jsonOptions);
         
         // Write to the specified output (e.g., console)
         _output.WriteLine(json);
+    }
+    
+    private string TrimQuotesFromValue(string value)
+    {
+        // Removes leading and trailing quotes from string values
+        if (value.StartsWith("\"") && value.EndsWith("\""))
+        {
+            return value.Substring(1, value.Length - 2);
+        }
+        return value;
     }
 }
