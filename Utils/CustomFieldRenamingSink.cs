@@ -1,4 +1,5 @@
 ﻿using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 
 namespace WeatherApi.Utils;
 
@@ -45,6 +46,7 @@ public class CustomFieldRenamingSink : ILogEventSink
 
         // Serialize the modified dictionary to JSON
         string json = JsonSerializer.Serialize(logDictionary, jsonOptions);
+        json = json.Replace("\\\"", "\"");
         
         // Write to the specified output (e.g., console)
         _output.WriteLine(json);
